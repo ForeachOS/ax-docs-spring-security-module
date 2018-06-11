@@ -1,0 +1,13 @@
+= Cache configuration
+
+{module-name} uses the following caches:
+
+|===
+|Name |Description
+
+|securityPrincipalCache +
+ (`SpringSecurityModuleCache.SECURITY_PRINCIPAL`)
+|Caches `SecurityPrincipal` instances by principal name.
+Used by the default <<security-principal,`SecurityPrincipalService`>>.
+
+|===

@@ -1,0 +1,11 @@
+= 2.x.x release notes
+
+[#2-0-1]
+== 2.0.1.RELEASE
+Minor bugfixes.
+
+== 2.0.0.RELEASE
+Requires Across 2.0.0+.
+
+* compatibility release for Spring 4.2 and Spring Security 4
+* added <<security-principal-label-resolver,`SpringSecurityLabelResolver`>> infrastructure

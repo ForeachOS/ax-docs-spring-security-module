@@ -1,0 +1,18 @@
+= 3.x.x release notes
+
+[#3-0-0]
+== 3.0.0.RELEASE
+Requires Across 3.0.0 or higher.
+
+The security implementation has been rewritten to reuse existing Spring Boot security auto-configuration where possible.
+In certain applications (for example with Actuator or the H2 Console), this might mean that additional security will now be active by default.
+
+List of changes:
+
+* `WebSecurityConfigurer` beans from other modules or the parent `ApplicationContext` are now also supported
+** it is no longer strictly required to use `SpringSecurityWebConfigurer` from a module
+* default Spring Boot security configuration will be applied as of this version
+** an additional default Security filter for ignoring requests is automatically added, a module or application can provide one or more `IgnoredRequestCustomizer`
+** the default `InMemoryAuthenticationManager`
+* unlike a regular Spring Boot application this module does not activate <<basic-security,basic authentication>> by default
+** basic authentication for the entire application is only explicitly enabled if you set property `security.basic.enabled` to `true`

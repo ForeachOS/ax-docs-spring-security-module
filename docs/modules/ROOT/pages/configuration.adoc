@@ -1,0 +1,111 @@
+= Configuring web security
+This chapter details how security configuration can be applied in an Across application.
+It does not explain how to create security rules or how Spring Security works.
+Please refer to the official {spring-security-url}[Spring security] documentation for this.
+
+== Authentication manager
+SpringSecurityModule will always build an `AuthenticationManager` when it is present.
+If you do not build one yourself, a default one with an in-memory user based on the `SecurityProperties` will be added.
+Unless a password is set using `security.user.password`, one will be generated when the application starts, and printed in the logs.
+
+Any module can configure the global `AuthenticationManager`, by injecting an `@EnableGlobalAuthentication` class in the SpringSecurityModule.
+This is usually done by adding it as a module extension (`@ModuleConfiguration` in an `extensions` package).
+
+.Example configuration of the global AuthenticationManager
+[source,java]
+----
+@ModuleConfiguration(SpringSecurityModule.NAME)
+@EnableGlobalAuthentication
+public class AuthenticationConfiguration
+{
+        @Autowired
+        public void configureGlobal( AuthenticationManagerBuilder auth ) throws Exception {
+                auth.inMemoryAuthentication()
+                    .withUser( "admin" ).password( "admin" )
+                    .authorities( new SimpleGrantedAuthority( "access administration" ) );
+        }
+}
+----
+
+[#basic-security]
+== Basic security
+SpringSecurityModule supports the default `SecurityProperties` provided by Spring Boot.
+Unlike a regular Spring Boot application however, basic security for the entire application is not enabled by default.
+
+If you set property `security.basic.enabled` to `true`, basic security will be applied for the entire application.
+
+.Spring Boot SecurityProperties
+[source,properties]
+----
+# SECURITY (SecurityProperties)
+security.basic.authorize-mode=role # Security authorize mode to apply.
+security.basic.enabled=false # Enable basic authentication.
+security.basic.path=/** # Comma-separated list of paths to secure.
+security.basic.realm=Spring # HTTP basic realm name.
+security.enable-csrf=false # Enable Cross Site Request Forgery support.
+security.filter-order=0 # Security filter chain order.
+security.filter-dispatcher-types=ASYNC, FORWARD, INCLUDE, REQUEST # Security filter chain dispatcher types.
+security.headers.cache=true # Enable cache control HTTP headers.
+security.headers.content-security-policy= # Value for content security policy header.
+security.headers.content-security-policy-mode=default # Content security policy mode.
+security.headers.content-type=true # Enable "X-Content-Type-Options" header.
+security.headers.frame=true # Enable "X-Frame-Options" header.
+security.headers.hsts=all # HTTP Strict Transport Security (HSTS) mode (none, domain, all).
+security.headers.xss=true # Enable cross site scripting (XSS) protection.
+security.ignored= # Comma-separated list of paths to exclude from the default secured paths.
+security.require-ssl=false # Enable secure channel for all requests.
+security.sessions=stateless # Session creation policy (always, never, if_required, stateless).
+security.user.name=user # Default user name.
+security.user.password= # Password for the default user name. A random password is logged on startup by default.
+security.user.role=USER # Granted roles for the default user name.
+----
+
+Although SpringSecurityModule does not enable basic security by default, other libraries might still apply security unless it is explicitly disabled.
+An example is the H2 Console which will apply the basic security unless `security.basic.enabled` is explicitly set to `false`.
+
+[#customizing]
+== Custom security
+The `SpringSecurityModule` enables support for `SpringSecurityWebConfigurer` implementations to be provided by different modules.
+Usually this is done by implementing your own `SpringSecurityWebConfigurerAdapter`.
+Every `SpringSecurityWebConfigurerAdapter` results in a separate request filter to be added to the Spring security filter chain.
+Once a request has been handled by a filter, all remaining filters will be skipped.
+
+For this reason *it is vital that `SpringSecurityWebConfigurerAdapter` instances are added in the correct order and are correctly scoped to the subset of requests they are meant for*.
+The `SpringSecurityModule` respects all bean ordering rules that Across provides: using the module order by default and allowing the use of `@Order`, `@OrderInModule` or their respective interfaces.
+
+NOTE: As of version 3.0.0, default `WebSecurityConfigurer` beans from modules are supported as well for security configuration.
+
+Spring security itself allows very advanced configuration and customization.
+Please refer to the official {spring-security-url}[Spring security] documentation for more details.
+
+== Disabling security on requests
+If you want to exclude certain paths from security (for example for static resources), you can either set them using the property `security.ignored` or provide an `IgnoredRequestCustomizer` to add them.
+
+== Auto-configuration support
+Most of the actual security configuration is applied in the context of the SpringSecurityModule.
+Even though `WebSecurityConfigurer` or `SpringSecurityWebConfigurer` beans can be provided by other modules, when they need fine-grained access to the Spring security beans (eg. `ObjectPostProcessor`) it is usually better to inject them in the SpringSecurityModule.
+
+When adapting auto-configuration classes of existing starters, you should try shifting the relevant security configurations to the SpringSecurityModule.
+This can often be done simply by adding an entry in a `META-INF/across.configuration``
+
+.Example META-INF/across.configuration (excerpt of SpringSecurityModule)
+[source,properties]
+----
+# Move existing security auto-configurations to SpringSecurityModule
+com.foreach.across.AutoConfigurationEnabled=\
+  org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration->SpringSecurityModule,\
+  org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration->SpringSecurityModule
+----
+
+If this is not sufficient, you might have to write a custom `AcrossBootstrapConfigurer` adapter, and inject that class instead of the original auto-configuration.
+Please see the link:{across-docs-url}[Across framework reference documentation] for more information on the `across.configuration` file.
+
+[#debugging]
+== Debugging security configuration ordering
+If you want to trace the different configurers that are being applied, you should enable `DEBUG` logging for class `com.foreach.across.modules.spring.security.config.AcrossWebSecurityConfiguration`.
+This will output the different configurer beans in the order they will be applied, along with their type, bean and module name (if available).
+
+[[auditable-entity-interceptor]]
+== Auditing entities
+If the {across-hibernate-module-url}[AcrossHibernateJpaModule] is present in the Across context, an `AuditableEntityInterceptor` bean will be created.
+Any entity implementing the `com.foreach.across.modules.hibernate.business.Auditable` interface will get its auditing properties updated before it is persisted.
