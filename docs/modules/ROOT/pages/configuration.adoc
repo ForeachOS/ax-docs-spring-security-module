@@ -1,4 +1,6 @@
 = Configuring web security
+include::{partialsdir}/_attributes.adoc[]
+
 This chapter details how security configuration can be applied in an Across application.
 It does not explain how to create security rules or how Spring Security works.
 Please refer to the official {spring-security-url}[Spring security] documentation for this.
@@ -98,7 +100,7 @@ com.foreach.across.AutoConfigurationEnabled=\
 ----
 
 If this is not sufficient, you might have to write a custom `AcrossBootstrapConfigurer` adapter, and inject that class instead of the original auto-configuration.
-Please see the link:{across-docs-url}[Across framework reference documentation] for more information on the `across.configuration` file.
+Please see the xref:across-autoconfigure:ROOT:index.adoc[Across auto-configuration support] for more information on the `across.configuration` file.
 
 [#debugging]
 == Debugging security configuration ordering
@@ -107,5 +109,5 @@ This will output the different configurer beans in the order they will be applie
 
 [[auditable-entity-interceptor]]
 == Auditing entities
-If the {across-hibernate-module-url}[AcrossHibernateJpaModule] is present in the Across context, an `AuditableEntityInterceptor` bean will be created.
+If the {url-AcrossHibernateModule}[AcrossHibernateJpaModule] is present in the Across context, an `AuditableEntityInterceptor` bean will be created.
 Any entity implementing the `com.foreach.across.modules.hibernate.business.Auditable` interface will get its auditing properties updated before it is persisted.

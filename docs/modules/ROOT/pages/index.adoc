@@ -1,4 +1,5 @@
 = SpringSecurityModule
+include::{partialsdir}/_attributes.adoc[]
 
 This module enables support for {spring-security-url}[Spring security] for an Across based application.
 The standard Spring security filter chain and method security annotation processors will be registered automatically if this module is present.

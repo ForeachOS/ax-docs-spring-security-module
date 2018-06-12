@@ -1,0 +1,1 @@
+:spring-security-url: https://docs.spring.io/spring-security/site/docs/4.2.6.RELEASE/reference/htmlsingle/

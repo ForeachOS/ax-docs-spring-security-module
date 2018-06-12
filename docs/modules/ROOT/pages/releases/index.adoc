@@ -26,7 +26,7 @@ SpringSecurityModule follows a https://semver.org[semantic versioning] scheme.
 |===
 |Module |Type |Description
 
-|{across-hibernate-module-url}[AcrossHibernateJpaModule]
+|{url-AcrossHibernateModule}[AcrossHibernateJpaModule]
 |extension
 |Creates the <<auditable-entity-interceptor,AuditableEntityInterceptor>> bean.
 

@@ -1,6 +1,6 @@
 = Cache configuration
 
-{module-name} uses the following caches:
+SpringSecurityModule uses the following caches:
 
 |===
 |Name |Description
