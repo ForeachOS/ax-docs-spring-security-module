@@ -1,5 +1,5 @@
 name: spring-security-module
 title: "Module: Security"
-version: 3.0.2
+version: master
 nav:
 - modules/ROOT/nav.adoc
