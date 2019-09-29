@@ -4,4 +4,5 @@
 == 4.0.0.RELEASE
 * *Requires Across 5.0.0.*
 * Spring upgrade related changes
-* SecurityPrincipalService and SecurityPrincipalRetrievalStrategy now always return Optional
+* `SecurityPrincipalService` and `SecurityPrincipalRetrievalStrategy` now always return Optional
+* `SpringSecurityWebConfigurer` and `SpringSecurityWebConfigurerAdapter` have been replaced by the single `AcrossWebSecurityConfigurer` interface
