@@ -2,7 +2,23 @@
 
 [#4-0-0]
 == 4.0.0.RELEASE
-* *Requires Across 5.0.0.*
-* Spring upgrade related changes
-* `SecurityPrincipalService` and `SecurityPrincipalRetrievalStrategy` now always return Optional
+
+This release requires Across 5.0.0 and has been updated to work with Spring Security 5.
+
+Additionally the `SecurityPrincipal` infrastructure has been extended to work more through a `SecurityPrincipalId`.
+This should ensure better interoperability with regular Spring security as well as avoid typical serialization problems (as authentication tokens are often serialized, eg in session storage).
+
+Breaking changes:
+
 * `SpringSecurityWebConfigurer` and `SpringSecurityWebConfigurerAdapter` have been replaced by the single `AcrossWebSecurityConfigurer` interface
+* `SecurityPrincipalService` and `SecurityPrincipalRetrievalStrategy` now always return Optional
+
+Additional, possibly breaking changes:
+
+* addition of `SecurityPrincipalId` and `@CurrentSecurityPrincipal` and reworking of default authentication
+** the `SecurityPrincipalAuthentication` no longer holds the actual `SecurityPrincipal` internally but only the `SecurityPrincipalId`
+** use either `CurrentSecurityPrincipalProxy.getPrincipal(Class<? extends SecurityPrincipal>)` to retrieve the actual `SecurityPrincipal`
+** alternatively use `@CurrentSecurityPrincipal` instead of `@AuthenticationPrincipal` (the latter now only returns the `SecurityPrincipalId`)
+* `CurrentSecurityPrincipalProxy.isAuthenticated()` now returns `false` with an anonymous authentication
+** the `AuthenticationTrustResolver` is used to determine if an authentication should be considered anonymous
+
