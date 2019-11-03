@@ -21,4 +21,6 @@ Additional, possibly breaking changes:
 ** alternatively use `@CurrentSecurityPrincipal` instead of `@AuthenticationPrincipal` (the latter now only returns the `SecurityPrincipalId`)
 * `CurrentSecurityPrincipalProxy.isAuthenticated()` now returns `false` with an anonymous authentication
 ** the `AuthenticationTrustResolver` is used to determine if an authentication should be considered anonymous
-
+* SpringSecurityInfrastructureModule (automatically added to an Across context) now extends AcrossContextInfrastructureModule instead of bootstrapping its own `ApplicationContext`
+** this is a minor performance improvement
+** any code directly using SpringSecurityInfrastructureModule bean factory should switch to the AcrossContextInfrastructureModule bean factory instead
