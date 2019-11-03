@@ -1,7 +1,7 @@
 = 4.x.x release notes
 
 [#4-0-0]
-== 4.0.0.RELEASE
+== 4.0.0-SNAPSHOT
 
 This release requires Across 5.0.0 and has been updated to work with Spring Security 5.
 
