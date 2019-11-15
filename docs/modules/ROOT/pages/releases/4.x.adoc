@@ -12,6 +12,7 @@ Breaking changes:
 
 * `SpringSecurityWebConfigurer` and `SpringSecurityWebConfigurerAdapter` have been replaced by the single `AcrossWebSecurityConfigurer` interface
 * `SecurityPrincipalService` and `SecurityPrincipalRetrievalStrategy` now always return Optional
+* `SecurityPrincipalException` has been removed
 
 Additional, possibly breaking changes:
 
@@ -21,6 +22,11 @@ Additional, possibly breaking changes:
 ** alternatively use `@CurrentSecurityPrincipal` instead of `@AuthenticationPrincipal` (the latter now only returns the `SecurityPrincipalId`)
 * `CurrentSecurityPrincipalProxy.isAuthenticated()` now returns `false` with an anonymous authentication
 ** the `AuthenticationTrustResolver` is used to determine if an authentication should be considered anonymous
+* a new `SecurityPrincipalReference` has been provided which exposes a `SecurityPrincipalId`
+** it can be used to connect custom `Authentication` principals to a `SecurityPrincipal` and allow the `CurrentSecurityPrincipal` infrastructure to resolve the target
+** a `SecurityPrincipalUserDetails` implementation has been provided as well, which extends `UserDetails` with a unique `SecurityPrincipalId`
+* an `AuthenticationSecurityPrincipalResolver` service is available for retrieving the possible `SecurityPrincipal` that is represented by an `Authentication`
+** it supports different `SecurityPrincipal` representations: embedded `SecurityPrincipal`, `SecurityPrincipalId`, `SecurityPrincipalReference` or `String` which represents the `SecurityPrincipalId`
 * SpringSecurityInfrastructureModule (automatically added to an Across context) now extends AcrossContextInfrastructureModule instead of bootstrapping its own `ApplicationContext`
 ** this is a minor performance improvement
 ** any code directly using SpringSecurityInfrastructureModule bean factory should switch to the AcrossContextInfrastructureModule bean factory instead
