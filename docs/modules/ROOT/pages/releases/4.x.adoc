@@ -3,7 +3,7 @@
 [#4-0-0]
 == 4.0.0.RELEASE
 
-This release requires Across 5.0.0 and has been updated to work with Spring Security 5.
+This release requires Across 5.0.1 and has been updated to work with Spring Security 5.
 
 Additionally the `SecurityPrincipal` infrastructure has been extended to work more through a `SecurityPrincipalId`.
 This should ensure better interoperability with regular Spring security as well as avoid typical serialization problems (as authentication tokens are often serialized, eg in session storage).
