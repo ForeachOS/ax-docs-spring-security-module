@@ -1,5 +1,12 @@
 = 4.x.x release notes
 
+[#4-1-0]
+== 4.1.0.RELEASE
+
+* *Requires Across 5.1.0*
+* Changed `SwitchUserGrantedAuthority` usages to non-null parameter for `Authentication`
+* Switched to JUnit5
+
 [#4-0-0]
 == 4.0.0-SNAPSHOT
 
